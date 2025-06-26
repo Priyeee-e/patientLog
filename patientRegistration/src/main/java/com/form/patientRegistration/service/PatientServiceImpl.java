@@ -33,12 +33,14 @@ public class PatientServiceImpl implements PatientService {
                 existingPatient.setAge(patientData.getAge());
                 existingPatient.setBloodGroup(patientData.getBloodGroup());
                 existingPatient.setAadhar(patientData.getAadhar());
+                existingPatient.setFlag(patientData.getFlag());
 
                 return patientRepository.save(existingPatient); //  Save updated patient9
         }else{
             //  Create new patient if ID is null or not found
             return patientRepository.save(patientData);
         }
+
     }
 
 
@@ -46,7 +48,7 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public List<Patient> getPatients() {
 
-        return patientRepository.findAll();
+        return patientRepository.findActivePatients();
     }
 
 

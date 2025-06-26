@@ -53,7 +53,7 @@ $(document).ready(function () {
 
     submitHandler: function (form) {
       let data = {
-        patientId: $('#patientId').val(), // ✅ Hidden ID field
+        patientId: $('#patientId').val(), //  Hidden ID field
         firstName: $('#firstName').val(),
         lastName: $('#lastName').val(),
         email: $('#email').val(),
@@ -68,14 +68,14 @@ $(document).ready(function () {
 
       console.log(data);
 
-      // ✅ Send to backend via AJAX
+      // Send to backend via AJAX
       $.ajax({
         url: '/api/patients',
         type: 'POST', // You can make this dynamic (POST/PUT) based on patientId
         contentType: 'application/json',
         data: JSON.stringify(data),
         success: function (response) {
-          alert("✅ Form submitted successfully!");
+          alert(" Form submitted successfully!");
           console.log("Server response:", response);
 
           // Update or Add row in AG Grid
@@ -130,10 +130,49 @@ $(document).ready(function () {
   const eGridDiv = document.querySelector("#myGrid");
   new agGrid.Grid(eGridDiv, gridOptions);
 
-  // ✅ Fill form when row clicked
+    //  Soft Delete Handler
+    $('#deleteBtn').click(function () {
+      const selectedRow = gridOptions.api.getSelectedRows()[0];
+
+      if (!selectedRow) {
+        alert("⚠ Please select a patient to delete.");
+        return;
+      }
+
+      // Prepare updated data (same data + flag = 1)
+      const updatedData = {
+        ...selectedRow,
+        flag: 1 //  Soft delete indicator
+      };
+
+      $.ajax({
+        url: '/api/patients',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(updatedData),
+        success: function (response) {
+          alert(" Patient marked as deleted!");
+
+          //  Remove from grid visually
+          gridOptions.api.applyTransaction({ remove: [selectedRow] });
+
+          //  Clear form and hidden id
+          $('#patientForm')[0].reset();
+          $('#patientId').val("");
+          gridOptions.api.deselectAll();
+        },
+        error: function (err) {
+          alert(" Failed to delete patient.");
+          console.error("Delete error:", err);
+        }
+      });
+    });
+
+
+  //  Fill form when row clicked
   function onRowClicked(event) {
     const rowData = event.data;
-    $("#patientId").val(rowData.patientId); // ✅ Set hidden field
+    $("#patientId").val(rowData.patientId); //  Set hidden field
     $('#firstName').val(rowData.firstName);
     $('#lastName').val(rowData.lastName);
     $('#email').val(rowData.email);
@@ -146,7 +185,7 @@ $(document).ready(function () {
     $('#aadhar').val(rowData.aadhar);
   }
 
-  // ✅ Load data from backend on page load
+  // Load data from backend on page load
   $.ajax({
     url: '/api/patients',
     type: 'GET',

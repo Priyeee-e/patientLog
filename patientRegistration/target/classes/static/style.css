@@ -1,6 +1,6 @@
 body {
   font-family: Arial;
-  background: #d9f2ff;
+  background-image: url("https://images.pexels.com/photos/40568/medical-appointment-doctor-healthcare-40568.jpeg");
   padding: 20px;
 
   background-repeat: no-repeat;
@@ -11,6 +11,29 @@ body {
   /* Center the image */
 
 }
+.container {
+  display: flex;
+  gap: 20px;
+  align-items: stretch;
+  /* 🔁 Make children equal in height */
+  height: auto;
+}
+
+/* Equal size for both boxes */
+.box1,
+.box2 {
+  flex: 1;
+  padding: 20px;
+  background-color: #f2f2f2;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+
 
 h2 {
   text-align: center;
@@ -109,55 +132,55 @@ button:hover {
 button:hover {
   background-color: #005fa3;
 }
-.container {
-  display: flex;
-  gap: 20px;
-  align-items: stretch; /* 🔁 Make children equal in height */
-  height: auto;
-}
-
-/* Equal size for both boxes */
-.box1,
-.box2 {
-  flex: 1;                     /* ⏹ Equal width */
-  height: 100%;                /* 🔁 Will match tallest box */
-  max-height: 600px;           /* Or any limit you want */
-  overflow-y: auto;            /* 🧭 Scroll if content grows */
-  padding: 20px;
-  background-color: #f2f2f2;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  box-sizing: border-box;
-}
-
-.box2 {
-  flex: 1;
-  padding: 20px;
-   background-color: #f2f2f2;
-    border: 1px solid #ccc;
-    max-height: 500px;
-    overflow-y: auto;
-
-}
 
 
 
-  
+
+
+
 
 
 #myGrid {
   /*height: 100vh;
   width: 50% */
-    border: 1px solid #ccc;
-    padding: 5px;
-    box-sizing: border-box;
-    height: 400px;
-    width: 100%;
-    overflow: auto;
-  height: 400px; width: 100%; overflow: auto;
+  border: 1px solid #ccc;
+  padding: 5px;
+  box-sizing: border-box;
+  height: 400px;
+  width: 100%;
+  overflow: auto;
+  height: 100%;
+  width: 100%;
+  overflow: auto;
 }
 
 .ag-theme-alpine {
   height: 100%;
   width: 100%;
+}
+
+.button-wrapper {
+  text-align: right; /* Only this part moves to the right */
+  margin-bottom: 10px; /* Adds space below button */
+   display: flex;
+  justify-content: flex-end; /* aligns button to the right */
+  padding: 10px;
+}
+
+#deleteBtn {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: auto;             /* important: prevent full width */
+  min-width: unset;        /* reset any AG Grid/min-width styles */
+  max-width: fit-content;  /* shrink-wrap the content */
+}
+
+#deleteBtn:hover {
+  background-color: #c0392b;
 }

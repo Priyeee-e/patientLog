@@ -28,5 +28,6 @@ public class Patient {
     private Long age;
     private String bloodGroup;
     private String aadhar;
+    private int flag = 0;
 
 }
