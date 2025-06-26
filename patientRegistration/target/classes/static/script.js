@@ -1,96 +1,5 @@
-
-
-// $(document).ready(function () {
-//   $('#patientForm').validate({
-//     submitHandler: function (form) {
-//       let patientData = {
-//         firstName: $('#firstName').val(),
-//         lastName: $('#lastName').val(),
-//         city: $('#city').val(),         // optional
-//         address: $('#address').val(),   // optional
-//         email: $('#email').val(),
-//         contact: $('#contact').val(),
-//         gender: $('#gender').val(),
-//         age: $('#age').val(),
-//         bloodGroup: $('#bloodGroup').val(),
-//         aadharNumber: $('#aadhar').val(),
-
-//       };
-
-//       console.log(patientData);
-//       alert("Data collected! Check console.");
-//     }
-//   });
-// });
-
-// $(document).ready(function () {
-//   // Initialize validation on the form
-//   $('#patientForm').validate({
-//     rules: {
-//       firstName: "required",
-//       lastName: "required",
-//       email: {
-//         required: true,
-//         email: true
-//       },
-//       contact: {
-//         required: true,
-//         minlength: 10,
-//         maxlength: 10
-//       },
-//       city: "required",
-//       address: "required",
-//       gender: "required",
-//       age: {
-//         required: true,
-//         min: 0
-//       },
-//       bloodGroup: "required",
-//       aadhar: {
-//         required: true,
-//         minlength: 12,
-//         maxlength: 12,
-//         digits: true
-//       }
-//     },
-//     messages: {
-//       firstName: "Enter your first name",
-//       lastName: "Enter your last name",
-//       email: "Enter a valid email address",
-//       contact: "Enter a valid 10-digit contact number",
-//       city: "Enter your city",
-//       address: "Enter your address",
-//       gender: "Select your gender",
-//       age: "Enter a valid age",
-//       bloodGroup: "Select blood group",
-//       aadhar: "Enter 12-digit Aadhar number"
-//     },
-
-//     submitHandler: function (form) {
-//       // Collect form data into an object
-//       let patientData = {
-//         firstName: $('#firstName').val(),
-//         lastName: $('#lastName').val(),
-//         email: $('#email').val(),
-//         contact: $('#contact').val(),
-//         city: $('#city').val(),
-//         address: $('#address').val(),
-//         gender: $('#gender').val(),
-//         age: $('#age').val(),
-//         bloodGroup: $('#bloodGroup').val(),
-//         aadhar: $('input[name="aadhar"]').val()
-//       };
-
-//       // Show in console
-//       console.log(patientData);
-
-//       alert("Form submitted successfully!");
-//       // form.submit(); // if you want to actually submit or send to backend
-//     }
-//   });
-// });
-
 $(document).ready(function () {
+
   $('#patientForm').validate({
     rules: {
       firstName: "required",
@@ -119,8 +28,6 @@ $(document).ready(function () {
         digits: true
       }
     },
-
-
     messages: {
       firstName: "Please enter first name",
       lastName: "Please enter last name",
@@ -133,27 +40,20 @@ $(document).ready(function () {
       bloodGroup: "Choose blood group",
       aadhar: "Enter 12-digit Aadhar number"
     },
-
-    // // 👇 Custom error placement
-    // errorPlacement: function (error, element) {
-    //   // error.insertAfter(element); // can be customized to show anywhere
-    //    element.attr("placeholder", error.text());
-    // },
-
     errorPlacement: function (error, element) {
-  error.insertAfter(element); // ✅ shows error below the input
-}
-,
+      error.insertAfter(element); // Show error below the input
+    },
 
-      highlight: function (element) {
-    $(element).removeClass('valid').addClass('error');
-  },
-  unhighlight: function (element) {
-    $(element).removeClass('error').addClass('valid');
-  },
+    highlight: function (element) {
+      $(element).removeClass('valid').addClass('error');
+    },
+    unhighlight: function (element) {
+      $(element).removeClass('error').addClass('valid');
+    },
 
     submitHandler: function (form) {
       let data = {
+        patientId: $('#patientId').val(), // ✅ Hidden ID field
         firstName: $('#firstName').val(),
         lastName: $('#lastName').val(),
         email: $('#email').val(),
@@ -163,26 +63,99 @@ $(document).ready(function () {
         gender: $('#gender').val(),
         age: $('#age').val(),
         bloodGroup: $('#bloodGroup').val(),
-        aadhar: $('input[name="aadhar"]').val()
+        aadhar: $('#aadhar').val()
       };
-      console.log(data);
-      alert("Form is valid and data is collected!");
 
+      console.log(data);
+
+      // ✅ Send to backend via AJAX
       $.ajax({
         url: '/api/patients',
-        type: 'POST',
+        type: 'POST', // You can make this dynamic (POST/PUT) based on patientId
         contentType: 'application/json',
         data: JSON.stringify(data),
         success: function (response) {
           alert("✅ Form submitted successfully!");
           console.log("Server response:", response);
+
+          // Update or Add row in AG Grid
+          // if (data.patientId) {
+          //   gridOptions.api.applyTransaction({ update: [response] });
+          // } else {
+          //   gridOptions.api.applyTransaction({ add: [response] });
+          // }
+
+          form.reset();
+          $('#patientId').val(""); // Clear hidden field
         },
         error: function (err) {
           alert("❌ Submission failed.");
           console.error("Error:", err);
         }
       });
+
     }
   });
-});
 
+  // AG Grid Setup
+  const columnDefs = [
+    { headerName: "PatientId", field: "patientId" },
+    { headerName: "First Name", field: "firstName" },
+    { headerName: "Last Name", field: "lastName" },
+    { headerName: "Email", field: "email" },
+    { headerName: "Contact", field: "contact" },
+    { headerName: "City", field: "city" },
+    { headerName: "Address", field: "address" },
+    { headerName: "Age", field: "age" },
+    { headerName: "Blood Group", field: "bloodGroup" },
+    { headerName: "Aadhar", field: "aadhar" }
+  ];
+
+  const rowData = [];
+
+  const gridOptions = {
+    columnDefs: columnDefs,
+    rowData: rowData,
+    rowSelection: 'single',
+    onRowClicked: onRowClicked,
+    defaultColDef: {
+      filter: true,
+      sort: true,
+      flex: 1,
+      minWidth: 100,
+      resizable: true
+    }
+  };
+
+  const eGridDiv = document.querySelector("#myGrid");
+  new agGrid.Grid(eGridDiv, gridOptions);
+
+  // ✅ Fill form when row clicked
+  function onRowClicked(event) {
+    const rowData = event.data;
+    $("#patientId").val(rowData.patientId); // ✅ Set hidden field
+    $('#firstName').val(rowData.firstName);
+    $('#lastName').val(rowData.lastName);
+    $('#email').val(rowData.email);
+    $('#contact').val(rowData.contact);
+    $('#city').val(rowData.city);
+    $('#address').val(rowData.address);
+    $('#gender').val(rowData.gender);
+    $('#age').val(rowData.age);
+    $('#bloodGroup').val(rowData.bloodGroup);
+    $('#aadhar').val(rowData.aadhar);
+  }
+
+  // ✅ Load data from backend on page load
+  $.ajax({
+    url: '/api/patients',
+    type: 'GET',
+    success: function (data) {
+      gridOptions.api.setRowData(data);
+    },
+    error: function (err) {
+      console.error("Failed to fetch patients:", err);
+    }
+  });
+
+});

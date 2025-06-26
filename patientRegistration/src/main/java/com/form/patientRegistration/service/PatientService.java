@@ -7,6 +7,8 @@ import java.util.List;
 
 @Service
 public interface PatientService {
+
+
     public Patient savePatient(Patient data);
 
     public List<Patient> getPatients();

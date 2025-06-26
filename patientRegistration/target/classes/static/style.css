@@ -1,33 +1,41 @@
 body {
-    font-family: Arial;
-    background: #d9f2ff;
-    padding: 20px;
-    background-image: url('./img/patient-banner.jpg');
+  font-family: Arial;
+  background: #d9f2ff;
+  padding: 20px;
+
+  background-repeat: no-repeat;
+  /* Prevent repeating */
+  background-size: cover;
+  /* Make image cover entire area */
+  background-position: center center;
+  /* Center the image */
 
 }
 
 h2 {
-    text-align: center;
-    color: #fdfdfd;
-    font-weight: bold;
+  text-align: center;
+  color: #3b74d7;
+  font-weight: bold;
 }
 
- form {
-    background: white;
-    padding: 30px;
-    border-radius: 10px;
-    max-width: 900px;
-    width: 90%;
-    margin: 40px auto;
-    box-shadow: 0px 0px 15px #aaa;
-   flex-wrap: wrap;
+form {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  max-width: 900px;
+  /* width: 100%; */
+  margin: 40px auto;
+  box-shadow: 0px 0px 15px #aaa;
+  flex-wrap: wrap;
 }
+
 .form-field {
   flex: 1;
   min-width: 200px;
 }
 
-input, select {
+input,
+select {
   width: 100%;
   padding: 10px;
   margin-top: 5px;
@@ -36,33 +44,36 @@ input, select {
   box-sizing: border-box;
 }
 
-   /* 🔴 Red Border for Invalid Fields */
-input.error, select.error {
+/* 🔴 Red Border for Invalid Fields */
+input.error,
+select.error {
   border: 1px solid red;
   background-color: #ebdfda;
 }
 
 /* ✅ Green Border for Valid Fields */
-input.valid, select.valid {
+input.valid,
+select.valid {
   border: 1px solid rgb(3, 125, 3);
   background-color: rgb(223, 238, 222)
 }
 
 
 .form-group {
-   display: flex;
-    gap: 20px;
+  display: flex;
+  gap: 20px;
 
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
+
 label {
- display: block;
-    margin-bottom: 6px;
-    font-weight:500;
-    font-size: 14px;
-    text-align-last: auto;
-    margin-top: auto;
-    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  font-size: 14px;
+  text-align-last: auto;
+  margin-top: auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* Error label styling */
@@ -75,25 +86,78 @@ label.error {
 }
 
 /* Optional: Red border to invalid input */
-input.error, select.error {
+input.error,
+select.error {
   border: 1px solid red;
 }
 
 
 
 button {
+  width: 100%;
+  padding: 10px;
+  background: #0077cc;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+button:hover {
+  background-color: #005fa3;
+}
+
+button:hover {
+  background-color: #005fa3;
+}
+.container {
+  display: flex;
+  gap: 20px;
+  align-items: stretch; /* 🔁 Make children equal in height */
+  height: auto;
+}
+
+/* Equal size for both boxes */
+.box1,
+.box2 {
+  flex: 1;                     /* ⏹ Equal width */
+  height: 100%;                /* 🔁 Will match tallest box */
+  max-height: 600px;           /* Or any limit you want */
+  overflow-y: auto;            /* 🧭 Scroll if content grows */
+  padding: 20px;
+  background-color: #f2f2f2;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+.box2 {
+  flex: 1;
+  padding: 20px;
+   background-color: #f2f2f2;
+    border: 1px solid #ccc;
+    max-height: 500px;
+    overflow-y: auto;
+
+}
+
+
+
+  
+
+
+#myGrid {
+  /*height: 100vh;
+  width: 50% */
+    border: 1px solid #ccc;
+    padding: 5px;
+    box-sizing: border-box;
+    height: 400px;
     width: 100%;
-    padding: 10px;
-    background: #0077cc;
-    color: white;
-    border: none;
-    border-radius: 5px;
+    overflow: auto;
+  height: 400px; width: 100%; overflow: auto;
 }
 
-button:hover {
-    background-color: #005fa3;
-}
-
-button:hover {
-    background-color: #005fa3;
+.ag-theme-alpine {
+  height: 100%;
+  width: 100%;
 }
