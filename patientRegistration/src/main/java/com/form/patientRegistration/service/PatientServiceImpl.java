@@ -5,6 +5,7 @@ import com.form.patientRegistration.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,6 +51,12 @@ public class PatientServiceImpl implements PatientService {
 
         return patientRepository.findActivePatients();
     }
+
+    @Override
+    public List<Patient> getPatientsByDateRange(Date startDate, Date endDate) {
+        return patientRepository.findActivePatientsByDateRange(startDate, endDate);
+    }
+
 
 
 }

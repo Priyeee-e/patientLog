@@ -130,43 +130,70 @@ $(document).ready(function () {
   const eGridDiv = document.querySelector("#myGrid");
   new agGrid.Grid(eGridDiv, gridOptions);
 
-    //  Soft Delete Handler
-    $('#deleteBtn').click(function () {
-      const selectedRow = gridOptions.api.getSelectedRows()[0];
+  //  Soft Delete Handler
+  $('#deleteBtn').click(function () {
+    const selectedRow = gridOptions.api.getSelectedRows()[0];
 
-      if (!selectedRow) {
-        alert("⚠ Please select a patient to delete.");
-        return;
+    if (!selectedRow) {
+      alert("⚠ Please select a patient to delete.");
+      return;
+    }
+
+    // Prepare updated data (same data + flag = 1)
+    const updatedData = {
+      ...selectedRow,
+      flag: 1 //  Soft delete indicator
+    };
+
+    $.ajax({
+      url: '/api/patients',
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify(updatedData),
+      success: function (response) {
+        alert(" Patient marked as deleted!");
+
+        //  Remove from grid visually
+        gridOptions.api.applyTransaction({ remove: [selectedRow] });
+
+        //  Clear form and hidden id
+        $('#patientForm')[0].reset();
+        $('#patientId').val("");
+        gridOptions.api.deselectAll();
+      },
+      error: function (err) {
+        alert(" Failed to delete patient.");
+        console.error("Delete error:", err);
       }
-
-      // Prepare updated data (same data + flag = 1)
-      const updatedData = {
-        ...selectedRow,
-        flag: 1 //  Soft delete indicator
-      };
-
-      $.ajax({
-        url: '/api/patients',
-        type: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(updatedData),
-        success: function (response) {
-          alert(" Patient marked as deleted!");
-
-          //  Remove from grid visually
-          gridOptions.api.applyTransaction({ remove: [selectedRow] });
-
-          //  Clear form and hidden id
-          $('#patientForm')[0].reset();
-          $('#patientId').val("");
-          gridOptions.api.deselectAll();
-        },
-        error: function (err) {
-          alert(" Failed to delete patient.");
-          console.error("Delete error:", err);
-        }
-      });
     });
+  });
+
+  document.getElementById('searchBtn').addEventListener('click', function () {
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+
+    // ✅ Check if both dates are selected
+    if (startDate && endDate) {
+      fetch(`http://localhost:8080/patients/filter?startDate=${startDate}&endDate=${endDate}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then(data => {
+          // ✅ Load data into AG Grid
+          gridOptions.api.setRowData(data);
+        })
+        .catch(error => {
+          console.error("Error fetching filtered data:", error);
+          alert("Failed to fetch patient records.");
+        });
+    } else {
+      alert("Please select both Start and End dates.");
+    }
+  });
+
 
 
   //  Fill form when row clicked

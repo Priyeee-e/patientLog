@@ -8,6 +8,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 @Entity
 
 @AllArgsConstructor
@@ -29,5 +32,5 @@ public class Patient {
     private String bloodGroup;
     private String aadhar;
     private int flag = 0;
-
+    private Date registrationDate;
 }
